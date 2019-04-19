@@ -3,21 +3,22 @@
 # Increases saturation automatically when playing CS:GO
 #
 
-NAME=AutomaticVibrance
-LOGFILE=/dev/null
+NAME="AutomaticVibrance"
+CSTITLE="Counter-Strike: Global Offensive"
+LOGFILE="/dev/null"
 
 if [[ $1 == "--launch" ]] || [[ $1 == "-l" ]]; then
 	while true; do
 
-		# Wait for the game to start
-		while ! pgrep csgo_linux64 > /dev/null; do
+		# Wait till the game is active
+		while ! xdotool getwindowfocus getwindowname | grep "$CSTITLE" > /dev/null; do
 			sleep 1
 		done
 
 		nvidia-settings -a "DigitalVibrance=716" > /dev/null
 
-		# Wait for the game to end
-		while pgrep csgo_linux64 > /dev/null; do
+		# Wait till the game is NOT active
+		while xdotool getwindowfocus getwindowname | grep "$CSTITLE" > /dev/null; do
 			sleep 1
 		done
 
@@ -40,5 +41,6 @@ elif [[ $1 == "--stop" ]] || [[ $1 == "-s" ]]; then
 		echo $NAME already not running.
 	fi
 else
+	echo AutomaticVibrance V2
 	echo Usage: $0 --background
 fi
