@@ -37,10 +37,15 @@ elif [[ $1 == "--stop" ]] || [[ $1 == "-s" ]]; then
 	if pgrep -f "$RUN" > /dev/null; then
 		pgrep -f "$RUN" | xargs kill > /dev/null
 		nvidia-settings -a "DigitalVibrance=0" > /dev/null
-		echo $NAME has stopped.	else
+		echo $NAME has stopped.
 	else
 		echo $NAME already not running.
 	fi
 else
-	echo Usage: $0 --background
+	echo "$NAME V1"
+	echo "Usage: $NAME [option]"
+	echo
+	echo "  --background, -bg    launches the script in background"
+	echo "  --stop,       -s     stops the script"
+	echo "  --launch,     -l     executes the script"
 fi
