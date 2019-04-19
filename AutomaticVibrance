@@ -3,12 +3,15 @@
 # Increases saturation automatically when playing CS:GO
 #
 
-NAME=AutomaticVibrance
-LOGFILE=/dev/null
+LOCATION="$(readlink -f $0)"
+
+NAME="AutomaticVibrance"
+LOGFILE="/dev/null"
+
+RUN="$LOCATION --launch"
 
 if [[ $1 == "--launch" ]] || [[ $1 == "-l" ]]; then
 	while true; do
-
 		# Wait for the game to start
 		while ! pgrep csgo_linux64 > /dev/null; do
 			sleep 1
@@ -24,18 +27,17 @@ if [[ $1 == "--launch" ]] || [[ $1 == "-l" ]]; then
 		nvidia-settings -a "DigitalVibrance=0" > /dev/null
 	done
 elif [[ $1 == "--background" ]] || [[ $1 == "-bg" ]]; then
-	if pgrep -f $DIR/$0 > /dev/null; then
+	if pgrep -f "$RUN" > /dev/null; then
 		echo $NAME is already running.
 	else
-		DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
-		nohup bash $DIR/$0 --launch > $LOGFILE 2>&1 &
+		nohup bash $RUN --launch > $LOGFILE 2>&1 &
 		echo Started $NAME in background.
 	fi
 elif [[ $1 == "--stop" ]] || [[ $1 == "-s" ]]; then
-	if pgrep -f $DIR/$0 > /dev/null; then
-		pgrep -f $DIR/$0 | xargs kill > /dev/null
+	if pgrep -f "$RUN" > /dev/null; then
+		pgrep -f "$RUN" | xargs kill > /dev/null
 		nvidia-settings -a "DigitalVibrance=0" > /dev/null
-		echo $NAME has stopped.
+		echo $NAME has stopped.	else
 	else
 		echo $NAME already not running.
 	fi
